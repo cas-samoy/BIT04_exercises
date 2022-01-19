@@ -1,0 +1,160 @@
+select guestname, guestaddress from booking join guest on booking.guestno = guest.guestno join hotel on booking.hotelno = hotel.hotelno where city="London" order by guestname ;
++--------------+-----------------------+
+| guestname    | guestaddress          |
++--------------+-----------------------+
+| Carol Farrel | 6 Achray St, Glasgow  |
+| Joe Keogh    | 2 Fergus Dr, Aberdeen |
+| John Kay     | 56 High St, London    |
+| John Kay     | 56 High St, London    |
+| Mike Ritchie | 18 Tain St, London    |
+| Mike Ritchie | 18 Tain St, London    |
+| Tina Murphy  | 63 Well St, Glasgow   |
++--------------+-----------------------+
+
+select type, price from room where price < 40 and (type="double" or type="family") order by price asc;
++--------+-------+
+| type   | price |
++--------+-------+
+| double | 15.00 |
+| double | 29.00 |
+| double | 30.00 |
+| family | 35.00 |
+| family | 39.00 |
++--------+-------+
+
+select * from booking where dateto is null;
++---------+---------+------------+--------+--------+
+| hotelno | guestno | datefrom   | dateto | roomno |
++---------+---------+------------+--------+--------+
+| ch01    |   10006 | 2022-04-21 | NULL   |   1101 |
+| dc01    |   10003 | 2022-05-20 | NULL   |   1001 |
+| fb01    |   10001 | 2022-05-01 | NULL   |    701 |
++---------+---------+------------+--------+--------+
+
+select avg(price) from room;
++------------+
+| avg(price) |
++------------+
+|  35.748333 |
++------------+
+
+select sum(price) from room where type="double";
++------------+
+| sum(price) |
++------------+
+|     160.00 |
++------------+
+
+select distinct(guestno) from booking where (datefrom <= "2022-08-01" and dateto >= "2022-08-01") or (datefrom >= "2022-08-01" and datefrom <= "2022-08-31");
++---------+
+| guestno |
++---------+
+|   10005 |
++---------+
+(could be shorter with between)
+
+select hotelname, type, price from hotel join room on hotel.hotelno=room.hotelno where hotelname="The Tower Hotel";
++-----------------+--------+-------+
+| hotelname       | type   | price |
++-----------------+--------+-------+
+| The Tower Hotel | single | 19.00 |
+| The Tower Hotel | double | 29.00 |
+| The Tower Hotel | family | 39.00 |
++-----------------+--------+-------+
+
+select guestname, datefrom , dateto  from booking join hotel on booking.hotelno = hotel.hotelno join guest on booking.guestno = guest.guestno where hotelname="The
+Tower Hotel";
++--------------+------------+------------+
+| guestname    | datefrom   | dateto     |
++--------------+------------+------------+
+| John Kay     | 2022-04-01 | 2022-04-08 |
+| John Kay     | 2022-05-01 | NULL       |
+| Mike Ritchie | 2022-01-04 | 2022-01-29 |
+| Joe Keogh    | 2022-04-15 | 2022-05-15 |
+| Carol Farrel | 2022-05-02 | 2022-05-07 |
++--------------+------------+------------+
+
+select * from booking join hotel on booking.hotelno = hotel.hotelno join guest on booking.guestno = guest.guestno join room on booking.roomno = room.roomno where h
+otelname="The Tower Hotel";
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+| hotelno | guestno | datefrom   | dateto     | roomno | hotelno | hotelname       | city   | guestno | guestname    | guestaddress          | roomno | hotelno | type   | price |
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+| fb01    |   10001 | 2022-04-01 | 2022-04-08 |    501 | fb01    | The Tower Hotel | London |   10001 | John Kay     | 56 High St, London    |    501 | fb01    | single | 19.00 |
+| fb01    |   10001 | 2022-05-01 | NULL       |    701 | fb01    | The Tower Hotel | London |   10001 | John Kay     | 56 High St, London    |    701 | ch02    | single | 10.00 |
+| fb01    |   10001 | 2022-05-01 | NULL       |    701 | fb01    | The Tower Hotel | London |   10001 | John Kay     | 56 High St, London    |    701 | fb01    | family | 39.00 |
+| fb01    |   10002 | 2022-01-04 | 2022-01-29 |    601 | fb01    | The Tower Hotel | London |   10002 | Mike Ritchie | 18 Tain St, London    |    601 | fb01    | double | 29.00 |
+| fb01    |   10004 | 2022-04-15 | 2022-05-15 |    601 | fb01    | The Tower Hotel | London |   10004 | Joe Keogh    | 2 Fergus Dr, Aberdeen |    601 | fb01    | double | 29.00 |
+| fb01    |   10005 | 2022-05-02 | 2022-05-07 |    501 | fb01    | The Tower Hotel | London |   10005 | Carol Farrel | 6 Achray St, Glasgow  |    501 | fb01    | single | 19.00 |
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+
+select * from booking join hotel on booking.hotelno = hotel.hotelno join guest on booking.guestno = guest.guestno join room on room.hotelno = booking.hotelno and booking.roomno = room.roomno where hotelname="The Tower Hotel" and curdate() between datefrom and dateto;
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+--------------------+--------+---------+--------+-------+
+| hotelno | guestno | datefrom   | dateto     | roomno | hotelno | hotelname       | city   | guestno | guestname    | guestaddress       | roomno | hotelno | type   | price |
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+--------------------+--------+---------+--------+-------+
+| fb01    |   10002 | 2022-01-04 | 2022-01-29 |    601 | fb01    | The Tower Hotel | London |   10002 | Mike Ritchie | 18 Tain St, London |    601 | fb01    | double | 29.00 |
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+--------------------+--------+---------+--------+-------+
+
+select sum(price) from booking join hotel on booking.hotelno = hotel.hotelno join guest on booking.guestno = guest.guestno join room on room.hotelno = booking.hotelno and booking.roomno = room.roomno where hotelname="The Tower Hotel" and curdate() between datefrom and dateto;
++------------+
+| sum(price) |
++------------+
+|      29.00 |
++------------+
+
+select * from booking join hotel on booking.hotelno = hotel.hotelno join guest on booking.guestno = guest.guestno join room on room.hotelno = booking.hotelno and booking.roomno = room.roomno where hotelname="The Tower Hotel" and curdate() not between datefrom and dateto;
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+| hotelno | guestno | datefrom   | dateto     | roomno | hotelno | hotelname       | city   | guestno | guestname    | guestaddress          | roomno | hotelno | type   | price |
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+| fb01    |   10001 | 2022-04-01 | 2022-04-08 |    501 | fb01    | The Tower Hotel | London |   10001 | John Kay     | 56 High St, London    |    501 | fb01    | single | 19.00 |
+| fb01    |   10001 | 2022-05-01 | NULL       |    701 | fb01    | The Tower Hotel | London |   10001 | John Kay     | 56 High St, London    |    701 | fb01    | family | 39.00 |
+| fb01    |   10004 | 2022-04-15 | 2022-05-15 |    601 | fb01    | The Tower Hotel | London |   10004 | Joe Keogh    | 2 Fergus Dr, Aberdeen |    601 | fb01    | double | 29.00 |
+| fb01    |   10005 | 2022-05-02 | 2022-05-07 |    501 | fb01    | The Tower Hotel | London |   10005 | Carol Farrel | 6 Achray St, Glasgow  |    501 | fb01    | single | 19.00 |
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+
+select sum(price) from booking join hotel on booking.hotelno = hotel.hotelno join guest on booking.guestno = guest.guestno join room on room.hotelno = booking.hotelno and booking.roomno = room.roomno where hotelname="The Tower Hotel" and curdate() not between datefrom and dateto;
++------------+
+| sum(price) |
++------------+
+|     106.00 |
++------------+
+
+select * from booking join hotel on booking.hotelno = hotel.hotelno join guest on booking.guestno = guest.guestno join room on room.hotelno = booking.hotelno and booking.roomno = room.roomno where city="London";
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+| hotelno | guestno | datefrom   | dateto     | roomno | hotelno | hotelname       | city   | guestno | guestname    | guestaddress          | roomno | hotelno | type   | price |
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+| ch01    |   10006 | 2022-04-21 | NULL       |   1101 | ch01    | Omni Shoreham   | London |   10006 | Tina Murphy  | 63 Well St, Glasgow   |   1101 | ch01    | family | 59.99 |
+| ch02    |   10002 | 2022-04-25 | 2022-05-06 |    801 | ch02    | Phoenix Park    | London |   10002 | Mike Ritchie | 18 Tain St, London    |    801 | ch02    | double | 15.00 |
+| fb01    |   10001 | 2022-04-01 | 2022-04-08 |    501 | fb01    | The Tower Hotel | London |   10001 | John Kay     | 56 High St, London    |    501 | fb01    | single | 19.00 |
+| fb01    |   10001 | 2022-05-01 | NULL       |    701 | fb01    | The Tower Hotel | London |   10001 | John Kay     | 56 High St, London    |    701 | fb01    | family | 39.00 |
+| fb01    |   10002 | 2022-01-04 | 2022-01-29 |    601 | fb01    | The Tower Hotel | London |   10002 | Mike Ritchie | 18 Tain St, London    |    601 | fb01    | double | 29.00 |
+| fb01    |   10004 | 2022-04-15 | 2022-05-15 |    601 | fb01    | The Tower Hotel | London |   10004 | Joe Keogh    | 2 Fergus Dr, Aberdeen |    601 | fb01    | double | 29.00 |
+| fb01    |   10005 | 2022-05-02 | 2022-05-07 |    501 | fb01    | The Tower Hotel | London |   10005 | Carol Farrel | 6 Achray St, Glasgow  |    501 | fb01    | single | 19.00 |
++---------+---------+------------+------------+--------+---------+-----------------+--------+---------+--------------+-----------------------+--------+---------+--------+-------+
+
+select room.roomno from booking join hotel on booking.hotelno = hotel.hotelno join guest on booking.guestno = guest.guestno join room on room.hotelno = booking.hot
+elno and booking.roomno = room.roomno where city="London";
++--------+
+| roomno |
++--------+
+|   1101 |
+|    801 |
+|    501 |
+|    501 |
+|    601 |
+|    601 |
+|    701 |
++--------+
+
+select hotelname, count(*) from hotel join room on hotel.hotelno=room.hotelno where city="London"group by hotelname;
++-----------------+----------+
+| hotelname       | count(*) |
++-----------------+----------+
+| Omni Shoreham   |        2 |
+| Phoenix Park    |        2 |
+| The Tower Hotel |        3 |
++-----------------+----------+
+
+voorlaatsten nie gelukt
+
+laatsten:
+update room set price=price*1.05;
