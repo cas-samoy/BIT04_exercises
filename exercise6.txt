@@ -1,0 +1,16 @@
+select stdFirstName, stdLastName , stdCity , stdGPA from student where stdGPA >= 3.7;
++--------------+-------------+---------+--------+
+| stdFirstName | stdLastName | stdCity | stdGPA |
++--------------+-------------+---------+--------+
+| CRISTOPHER   | COLAN       | SEATTLE |   4.00 |
+| WILLIAM      | PILGRIM     | BOTHELL |   3.80 |
++--------------+-------------+---------+--------+
+
+select * from faculty where FacHireDate between "1999-01-01" and "2000-01-01";
++-------------+--------------+-------------+---------+----------+------------+---------+-------------+-----------+---------------+---------+
+| FacSSN      | FacFirstName | FacLastName | FacCity | FacState | FacZipCode | FacRank | FacHireDate | FacSalary | FacSupervisor | FacDept |
++-------------+--------------+-------------+---------+----------+------------+---------+-------------+-----------+---------------+---------+
+| 876-54-3210 | CRISTOPHER   | COLAN       | SEATTLE | WA       | 98114-1332 | ASST    | 1999-03-01  |  40000.00 | 654-32-1098   | MS      |
++-------------+--------------+-------------+---------+----------+------------+---------+-------------+-----------+---------------+---------+
+
+select OfferNo, CourseNo, FacSSN from offering where (Offterm = "FALL" and Offyear = 2005) or (OffTerm = "Winter" and OffYear = 2006);

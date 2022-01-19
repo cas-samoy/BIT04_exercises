@@ -1,0 +1,28 @@
+db.restaurants.find({},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+
+db.restaurants.find({borough:"Bronx"},{restaurant_id:1,name:1,borough:1,cuisine:1}).skip(5).limit(5)
+
+
+db.restaurants.find({"grades.score":{$gt:90}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+
+db.restaurants.find({cuisine:{$ne:"American"},"grades.score":{$gt:70},"address.coord.0":{$lt:-65.754168}})
+
+
+db.restaurants.find({borough:"Bronx", cuisine:{$in:["American", "Chinese"]}})
+
+
+db.restaurants.find({borough:{$nin:["Staten Island", "Queens", "Bronx", "Brooklyn"]}},{_id:1,name:1,borough:1,cuisine:1})
+
+db.restaurants.find({"grades.score":{$lt:10}},{_id:1,name:1,borough:1,cuisine:1})
+
+vraag 3 op tweede slide : pas
+
+db.restaurants.find({grades:{$elemMatch:{grade:"A", score:11, date:ISODate("2014-08-11T00:00:00Z")}}}, {_id:1,grades:1})
+
+
+db.restaurants.find().sort({cuisine:1,borough:-1})
+
+
+db.restaurants.find({"address.street":{$exists:0}})
