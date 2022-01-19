@@ -1,3 +1,5 @@
 ssh -T git@github.com
 make new repo on github
 in home dir: git clone + SSH link
+git commit -am "message" OR via vs code
+git push
