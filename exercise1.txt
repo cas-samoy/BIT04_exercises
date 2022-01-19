@@ -1,0 +1,3 @@
+ssh -T git@github.com
+make new repo on github
+in home dir: git clone + SSH link
